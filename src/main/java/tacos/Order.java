@@ -3,9 +3,14 @@ package tacos;
 import lombok.Data;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 @Data
 public class Order {
+
+    private Long id;
+    private Date placedAt;
+
     @NotNull(message="Name is required")
     private String name;
 

@@ -1,9 +1,11 @@
 package tacos.controllers;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -17,6 +19,7 @@ import tacos.Ingredient;
 import tacos.Ingredient.Type;
 import tacos.Order;
 import tacos.Taco;
+import tacos.data.IngredientRepository;
 
 import javax.validation.Valid;
 
@@ -25,20 +28,17 @@ import javax.validation.Valid;
 @RequestMapping("/design")
 public class DesignTacoController {
 
+    private final IngredientRepository ingredientRepo;
+
+    @Autowired
+    public DesignTacoController( IngredientRepository ingredientRepo ) {
+        this.ingredientRepo = ingredientRepo;
+    }
+
     @GetMapping
     public String showDesignForm(Model model) {
-        List<Ingredient> ingredientList = Arrays.asList(
-                new Ingredient("FLTO", "Flour Tortilla", Ingredient.Type.WRAP),
-                new Ingredient("COTO", "Corn Tortilla", Ingredient.Type.WRAP),
-                new Ingredient("GRBF", "Ground Beef", Ingredient.Type.PROTEIN),
-                new Ingredient("CARN", "Carnitas", Ingredient.Type.PROTEIN),
-                new Ingredient("TMTO", "Diced Tomatoes", Ingredient.Type.VEGGIES),
-                new Ingredient("LETC", "Lettuce", Ingredient.Type.VEGGIES),
-                new Ingredient("CHED", "Cheddar", Ingredient.Type.CHEESE),
-                new Ingredient("JACK", "Monterrey Jack", Ingredient.Type.CHEESE),
-                new Ingredient("SLSA    ", "Salsa", Ingredient.Type.SAUCE),
-                new Ingredient("SRCR", "Sour Cream", Ingredient.Type.SAUCE)
-        );
+        List<Ingredient> ingredientList = new ArrayList<>();
+        ingredientRepo.findAll().forEach(i -> ingredientList.add(i));
 
         Type[] types = Ingredient.Type.values();
         for (Type type : types) {
@@ -46,7 +46,6 @@ public class DesignTacoController {
                     filterByType(ingredientList, type));
         }
 
-        model.addAttribute("design", new Taco());
         return "design";
     }
 
