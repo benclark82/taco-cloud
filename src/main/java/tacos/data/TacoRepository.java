@@ -1,0 +1,8 @@
+package tacos.data;
+
+import tacos.Taco;
+
+public class TacoRepository {
+
+    Taco save(Taco design);
+}
